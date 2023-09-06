@@ -1,4 +1,5 @@
 using API.Data;
+using API.Data.Repository;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,6 +12,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<AppDbContext>(options => options.UseInMemoryDatabase(databaseName: "db"));
+
+builder.Services.AddScoped<ISensorRepository, SensorRepository>();
 
 var app = builder.Build();
 
