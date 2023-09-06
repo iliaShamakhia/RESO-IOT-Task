@@ -30,14 +30,14 @@ namespace API.Data.Repository
         {
             var telemetries = await _context.Telemetries
                 .Where(t => t.DeviceId == deviceId)
-                .OrderByDescending(t => t.Time)
-                .GroupBy(t => new DateTime(t.Time).ToString())
-                .Take(30)
+                .GroupBy(t => new DateTime(t.Time).ToString("yyyy-MM-dd"))
                 .Select(t => new TelemetryDTO()
                 {
-                    Date = DateTime.Parse(t.Key).ToString("yyyy-MM-dd", CultureInfo.InvariantCulture),
+                    Date = t.Key,
                     MaxIlluminance = t.Max(i => i.Illuminance)
                 })
+                .OrderByDescending(t => t.Date)
+                .Take(30)
                 .ToListAsync();
 
             return telemetries;
