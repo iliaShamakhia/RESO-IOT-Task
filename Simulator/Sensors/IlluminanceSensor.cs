@@ -95,6 +95,7 @@ namespace Simulator.Sensors
             using (var httpClient = new HttpClient())
             {
                 string url = $"https://localhost:7253/api/devices/{DeviceId}/statistics";
+                httpClient.DefaultRequestHeaders.Add("X-ApiKey", "0f8fad5b-d9cb-469f-a165-70867728950e");
                 var response = await httpClient.GetAsync(url);
 
                 if (response.IsSuccessStatusCode)
