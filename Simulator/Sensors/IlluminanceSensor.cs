@@ -77,6 +77,7 @@ namespace Simulator.Sensors
                 string url = $"https://localhost:7253/api/devices/{DeviceId}/telemetry";
                 var json = JsonConvert.SerializeObject(data);
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
+                httpClient.DefaultRequestHeaders.Add("X-ApiKey", "0f8fad5b-d9cb-469f-a165-70867728950e");
                 var response = await httpClient.PostAsync(url, content);
 
                 if (response.IsSuccessStatusCode)

@@ -1,6 +1,4 @@
-﻿using API.Data.DTOs;
-using Microsoft.Extensions.Configuration;
-using Simulator.Sensors;
+﻿using Simulator.Sensors;
 
 namespace Simulator
 {
@@ -8,6 +6,9 @@ namespace Simulator
     {
         static async Task Main(string[] args)
         {
+            Console.WriteLine("\nPress the Enter key to start the application...\n");
+
+            Console.ReadLine();
             var illumSensor = new IlluminanceSensor();
             illumSensor.Start();
 

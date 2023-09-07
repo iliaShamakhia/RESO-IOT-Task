@@ -1,10 +1,12 @@
-﻿using API.Data.DTOs;
+﻿using API.Authorization;
+using API.Data.DTOs;
 using API.Data.Repository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
+    [ApiKey]
     [Route("api/devices")]
     [ApiController]
     public class SensorController : ControllerBase
