@@ -21,20 +21,13 @@ namespace API.Controllers
         [HttpPost("{deviceId}/telemetry")]
         public async Task<IActionResult> Post(int deviceId, [FromBody] List<AddTelemetryDTO> telemetries)
         {
-            try
+            if (ModelState.IsValid)
             {
-                if (ModelState.IsValid)
-                {
-                    await _repo.AddDataAsync(deviceId, telemetries);
-                    return Ok();
-                }
+                await _repo.AddDataAsync(deviceId, telemetries);
+                return Ok();
+            }
 
-                return BadRequest();
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            return BadRequest();
         }
 
         [HttpGet("{deviceId}/statistics")]

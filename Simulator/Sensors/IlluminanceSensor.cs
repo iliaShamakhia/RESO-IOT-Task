@@ -20,14 +20,6 @@ namespace Simulator.Sensors
 
         public int DeviceId { get; set; } = 1;
 
-        //private readonly IConfigurationRoot config;
-
-        //public IlluminanceSensor()
-        //{
-        //    var configuration = new ConfigurationBuilder().AddJsonFile($"appsettings.json");
-        //    config = configuration.Build();
-        //}
-
         public void Start()
         {
             timer.Elapsed += MeasureIlluminance;
