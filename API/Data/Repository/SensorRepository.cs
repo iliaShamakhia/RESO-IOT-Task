@@ -36,7 +36,7 @@ namespace API.Data.Repository
                     Date = t.Key,
                     MaxIlluminance = t.Max(i => i.Illuminance)
                 })
-                .OrderByDescending(t => t.Date)
+                .OrderBy(t => t.Date)
                 .Take(30)
                 .ToListAsync();
 

@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc.Filters;
 namespace API.Authorization
 {
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
-    public class ApiKeyAttribute :Attribute, IAuthorizationFilter
+    public class ApiKeyAttribute : Attribute, IAuthorizationFilter
     {
         public void OnAuthorization(AuthorizationFilterContext context)
         {
