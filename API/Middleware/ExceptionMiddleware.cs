@@ -37,11 +37,11 @@ namespace API.Middleware
             }
         }
 
-        private Task HandleExceptionAsync(HttpContext httpContext)
+        private async Task HandleExceptionAsync(HttpContext httpContext)
         {
             httpContext.Response.ContentType = "application/json";
             httpContext.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-            return httpContext.Response.WriteAsync(new ExceptionDetails
+            await httpContext.Response.WriteAsync(new ExceptionDetails
             {
                 StatusCode = httpContext.Response.StatusCode,
                 Message = "Internal server error"
