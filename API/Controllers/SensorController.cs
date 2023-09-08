@@ -24,6 +24,7 @@ namespace API.Controllers
             if (ModelState.IsValid)
             {
                 await _repo.AddDataAsync(deviceId, telemetries);
+                
                 return Ok();
             }
 

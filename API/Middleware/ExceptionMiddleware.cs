@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using API.Data.DTOs;
+using System.Net;
 
 namespace API.Middleware
 {
@@ -31,10 +32,20 @@ namespace API.Middleware
                 {
                     _logger.LogError(ex, ex.Message);
                 }
-                
-                context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-                await context.Response.WriteAsync(ex.Message);
+
+                await HandleExceptionAsync(context);
             }
+        }
+
+        private Task HandleExceptionAsync(HttpContext httpContext)
+        {
+            httpContext.Response.ContentType = "application/json";
+            httpContext.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+            return httpContext.Response.WriteAsync(new ExceptionDetails
+            {
+                StatusCode = httpContext.Response.StatusCode,
+                Message = "Internal server error"
+            }.ToString());
         }
     }
 }

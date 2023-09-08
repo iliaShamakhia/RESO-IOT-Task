@@ -1,6 +1,7 @@
 using API.Authorization;
 using API.Data;
 using API.Data.Repository;
+using API.Extensions;
 using API.Middleware;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.EntityFrameworkCore;
@@ -36,7 +37,7 @@ var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 
-app.UseMiddleware<ExceptionMiddleware>();
+app.ConfigureCustomExceptionMiddleware();
 
 if (app.Environment.IsDevelopment())
 {
