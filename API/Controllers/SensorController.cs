@@ -13,9 +13,12 @@ namespace API.Controllers
     {
         private readonly ISensorRepository _repo;
 
-        public SensorController(ISensorRepository repo)
+        private readonly ILogger<SensorController> _logger;
+
+        public SensorController(ISensorRepository repo, ILogger<SensorController> logger)
         {
-               _repo = repo;
+            _repo = repo;
+            _logger = logger;
         }
 
         [HttpPost("{deviceId}/telemetry")]
@@ -24,7 +27,7 @@ namespace API.Controllers
             if (ModelState.IsValid)
             {
                 await _repo.AddDataAsync(deviceId, telemetries);
-                
+                _logger.LogInformation("Data added to database");
                 return Ok();
             }
 
@@ -35,6 +38,7 @@ namespace API.Controllers
         public async Task<IActionResult> Get(int deviceId)
         {
             var stats = await _repo.GetDataAsync(deviceId);
+            _logger.LogInformation("Data retrieved from database");
             return Ok(stats);
         }
 
