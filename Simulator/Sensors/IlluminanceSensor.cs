@@ -55,7 +55,30 @@ namespace Simulator.Sensors
 
         private double GetIlluminance()
         {
-            var illuminance = new Random().NextDouble() * 1000;
+            Random random = new Random();
+
+            double minIlluminance = 0;
+            double maxIlluminanceMorning = 1000;
+            double maxIlluminanceEvening = 500;
+
+            DateTime currentTime = DateTime.Now;
+
+            double peakValue = random.NextDouble() * (maxIlluminanceMorning - maxIlluminanceEvening) + maxIlluminanceEvening;
+
+            double illuminance;
+
+            if (currentTime.Hour < 12)
+            {
+                double morningPhase = (double)currentTime.Hour / 12;
+                illuminance = minIlluminance + ((maxIlluminanceMorning - minIlluminance) / 2) * (1 + Math.Sin(morningPhase * Math.PI));
+            }
+            else
+            {
+                double eveningPhase = (double)(currentTime.Hour - 12) / 12;
+                illuminance = minIlluminance + ((maxIlluminanceEvening - minIlluminance) / 2) * (1 - Math.Sin(eveningPhase * Math.PI));
+            }
+
+            illuminance += random.NextDouble() * (peakValue / 5);
 
             illuminance = Math.Round(illuminance * 2) / 2.0;
 
