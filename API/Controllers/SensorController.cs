@@ -38,8 +38,16 @@ namespace API.Controllers
         public async Task<IActionResult> Get(int deviceId)
         {
             var stats = await _repo.GetDataAsync(deviceId);
-            _logger.LogInformation("Data retrieved from database");
-            return Ok(stats);
+
+            if (stats.Any())
+            {
+                _logger.LogInformation("Data retrieved from database");
+                return Ok(stats);
+            }
+
+            _logger.LogInformation("Could not retrieve data from database");
+            return NotFound();
+
         }
 
 
