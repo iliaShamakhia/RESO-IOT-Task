@@ -16,9 +16,17 @@ namespace Simulator.Sensors
     {
         private static System.Timers.Timer timer = new System.Timers.Timer(1000);//15 * 60 * 1000);
 
-        private static List<AddTelemetryDTO> telemetries = new List<AddTelemetryDTO>();
+        private readonly List<AddTelemetryDTO> _telemetries;
+
+        private readonly Random _random;
 
         public int DeviceId { get; set; } = 1;
+
+        public IlluminanceSensor()
+        {
+            _telemetries = new List<AddTelemetryDTO>();
+            _random = new Random();
+        }
 
         public void Start()
         {
@@ -44,26 +52,24 @@ namespace Simulator.Sensors
                 Illuminance = illuminance
             };
 
-            telemetries.Add(telemetry);
+            _telemetries.Add(telemetry);
 
-            if (telemetries.Count == 4)
+            if (_telemetries.Count == 4)
             {
-                await SendDataToApi(telemetries);
-                telemetries.Clear();
+                await SendDataToApi(_telemetries);
+                _telemetries.Clear();
             }
         }
 
         private double GetIlluminance()
         {
-            Random random = new Random();
-
             double minIlluminance = 0;
             double maxIlluminanceMorning = 1000;
             double maxIlluminanceEvening = 500;
 
             DateTime currentTime = DateTime.Now;
 
-            double peakValue = random.NextDouble() * (maxIlluminanceMorning - maxIlluminanceEvening) + maxIlluminanceEvening;
+            double peakValue = _random.NextDouble() * (maxIlluminanceMorning - maxIlluminanceEvening) + maxIlluminanceEvening;
 
             double illuminance;
 
@@ -78,7 +84,7 @@ namespace Simulator.Sensors
                 illuminance = minIlluminance + ((maxIlluminanceEvening - minIlluminance) / 2) * (1 - Math.Sin(eveningPhase * Math.PI));
             }
 
-            illuminance += random.NextDouble() * (peakValue / 5);
+            illuminance += _random.NextDouble() * (peakValue / 5);
 
             illuminance = Math.Round(illuminance * 2) / 2.0;
 
