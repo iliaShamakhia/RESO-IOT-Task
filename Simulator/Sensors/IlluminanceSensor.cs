@@ -20,12 +20,16 @@ namespace Simulator.Sensors
 
         private readonly Random _random;
 
+        private readonly HttpClient _httpClient;
+
         public int DeviceId { get; set; } = 1;
 
         public IlluminanceSensor()
         {
             _telemetries = new List<AddTelemetryDTO>();
             _random = new Random();
+            _httpClient = new HttpClient();
+            _httpClient.DefaultRequestHeaders.Add("X-ApiKey", "0f8fad5b-d9cb-469f-a165-70867728950e");
         }
 
         public void Start()
@@ -93,40 +97,32 @@ namespace Simulator.Sensors
 
         private async Task SendDataToApi(List<AddTelemetryDTO> data)
         {
-            using (var httpClient = new HttpClient())
+            string url = $"https://localhost:7253/api/devices/{DeviceId}/telemetry";
+            var json = JsonConvert.SerializeObject(data);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+            var response = await _httpClient.PostAsync(url, content);
+
+            if (response.IsSuccessStatusCode)
             {
-                string url = $"https://localhost:7253/api/devices/{DeviceId}/telemetry";
-                var json = JsonConvert.SerializeObject(data);
-                var content = new StringContent(json, Encoding.UTF8, "application/json");
-                httpClient.DefaultRequestHeaders.Add("X-ApiKey", "0f8fad5b-d9cb-469f-a165-70867728950e");
-                var response = await httpClient.PostAsync(url, content);
-
-                if (response.IsSuccessStatusCode)
-                {
-                    return;
-                }
-
-                throw new HttpRequestException(response.StatusCode.ToString());
-
+                return;
             }
+
+            throw new HttpRequestException(response.StatusCode.ToString());
+
         }
 
         public async Task<string> GetDataFromApi()
         {
-            using (var httpClient = new HttpClient())
+            string url = $"https://localhost:7253/api/devices/{DeviceId}/statistics";
+            var response = await _httpClient.GetAsync(url);
+
+            if (response.IsSuccessStatusCode)
             {
-                string url = $"https://localhost:7253/api/devices/{DeviceId}/statistics";
-                httpClient.DefaultRequestHeaders.Add("X-ApiKey", "0f8fad5b-d9cb-469f-a165-70867728950e");
-                var response = await httpClient.GetAsync(url);
-
-                if (response.IsSuccessStatusCode)
-                {
-                    return await response.Content.ReadAsStringAsync();
-                }
-
-                throw new HttpRequestException(response.StatusCode.ToString());
-
+                return await response.Content.ReadAsStringAsync();
             }
+
+            throw new HttpRequestException(response.StatusCode.ToString());
+
         }
 
     }
